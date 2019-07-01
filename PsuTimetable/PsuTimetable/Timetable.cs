@@ -117,6 +117,8 @@ namespace PsuTimetable
 
 			int startWeekNumber = -1;
 			HtmlNode weeksNode = htmlDoc.DocumentNode.SelectSingleNode("//html/body/div[2]/div/div[2]/div[2]/ul");
+			timetableData.Weeks.Clear();
+
 			foreach (HtmlNode weekNode in weeksNode.SelectNodes("./li"))
 			{
 				Week week;

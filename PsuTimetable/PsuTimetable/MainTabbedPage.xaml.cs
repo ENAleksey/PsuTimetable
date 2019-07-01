@@ -194,7 +194,6 @@ namespace PsuTimetable
 
 			// Days pages
 			var weeks = Timetable.GetWeeks();
-			WriteDebugLine(weeks.Count.ToString());
 			foreach (Day day in weeks[currentWeekId].Days)
 			{
 				ContentPage page = new ContentPage
@@ -238,10 +237,8 @@ namespace PsuTimetable
 			}
 
             // Teachers page
-            List<Teacher> teachers = Teachers.GetTeachers();
-			WriteDebugLine(teachers.Count.ToString());
+            var teachers = Teachers.GetTeachers();
 			var teachersStackLayout = new StackLayout();
-            teachersStackLayout.Children.Clear();
 			teacherPage.Content = new ScrollView
 			{
 				Content = teachersStackLayout
