@@ -10,9 +10,9 @@ namespace PsuTimetable
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MainTabbedPage : TabbedPage
 	{
-		Label debugLabel;
-		Entry consoleEntry;
-		int currentWeekId = 0;
+		private readonly Label debugLabel;
+		private readonly Entry consoleEntry;
+		private int currentWeekId = 0;
 
 		public MainTabbedPage()
 		{
@@ -73,7 +73,7 @@ namespace PsuTimetable
 
 			if (Timetable.NeedUpdate())
 			{
-				Refresh();
+				_ = Refresh();
 			}
 			else
 			{
@@ -97,8 +97,7 @@ namespace PsuTimetable
 			}
 			else if (consoleEntry.Text.StartsWith("currentWeekId="))
 			{
-				int temp;
-				if (int.TryParse(consoleEntry.Text.Substring(14), out temp))
+				if (int.TryParse(consoleEntry.Text.Substring(14), out int temp))
 				{
 					if (temp >= 0 && temp < Timetable.GetWeeks().Count)
 					{
@@ -141,7 +140,7 @@ namespace PsuTimetable
 
 		private async Task Refresh()
 		{
-			if (App.IsConnectionAvailable())
+			if (await App.IsConnectionAvailable())
 			{
 				if (!App.IsSignedIn && Credentials.IsSaved())
 				{
@@ -236,15 +235,15 @@ namespace PsuTimetable
 				}
 			}
 
-            // Teachers page
-            var teachers = Teachers.GetTeachers();
+			// Teachers page
+			var teachers = Teachers.GetTeachers();
 			var teachersStackLayout = new StackLayout();
 			teacherPage.Content = new ScrollView
 			{
 				Content = teachersStackLayout
 			};
 			teacherPage.Padding = new Thickness(0, 8, 0, 0);
-			
+
 			foreach (Teacher teacher in teachers)
 			{
 				var teacherImage = new Image

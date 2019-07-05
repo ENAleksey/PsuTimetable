@@ -15,10 +15,10 @@ namespace PsuTimetable
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class LoginPage : ContentPage
 	{
-		Label messageLabel;
-		Entry usernameEntry;
-		Entry passwordEntry;
-		Switch saveCredentialsSwitch;
+		private readonly Label messageLabel;
+		private readonly Entry usernameEntry;
+		private readonly Entry passwordEntry;
+		private readonly Switch saveCredentialsSwitch;
 
 		public LoginPage()
 		{
@@ -81,8 +81,8 @@ namespace PsuTimetable
 			};
 
 			usernameEntry.Completed += (object sender, EventArgs args) => passwordEntry.Focus();
-			passwordEntry.Completed += (object sender, EventArgs args) => Login(usernameEntry.Text, passwordEntry.Text, saveCredentialsSwitch.IsToggled);
-			loginButton.Clicked += (object sender, EventArgs args) => Login(usernameEntry.Text, passwordEntry.Text, saveCredentialsSwitch.IsToggled);
+			passwordEntry.Completed += async (object sender, EventArgs args) => await Login(usernameEntry.Text, passwordEntry.Text, saveCredentialsSwitch.IsToggled);
+			loginButton.Clicked += async (object sender, EventArgs args) => await Login(usernameEntry.Text, passwordEntry.Text, saveCredentialsSwitch.IsToggled);
 			openInBrowserButton.Clicked += (object sender, EventArgs args) => Device.OpenUri(new Uri("https://student.psu.ru/pls/stu_cus_et/stu.timetable"));
 
 			Content = new StackLayout
@@ -110,7 +110,7 @@ namespace PsuTimetable
 			};
 		}
 
-		private async void Login(string username, string password, bool bSaveCredentials)
+		private async Task Login(string username, string password, bool bSaveCredentials)
 		{
 			if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
 			{
@@ -118,7 +118,7 @@ namespace PsuTimetable
 				return;
 			}
 
-			if (!App.IsConnectionAvailable())
+			if (!await App.IsConnectionAvailable())
 			{
 				messageLabel.Text = "Не удалось подключиться к сети";
 				return;

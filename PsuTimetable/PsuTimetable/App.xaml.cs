@@ -6,6 +6,7 @@ using System.Web;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Net;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace PsuTimetable
@@ -66,15 +67,16 @@ namespace PsuTimetable
 			return 0;
 		}
 
-		public static bool IsConnectionAvailable()
+		public static async Task<bool> IsConnectionAvailable()
 		{
+			var req = WebRequest.Create("http://www.google.com");
+			req.Timeout = 5000;
 			try
 			{
-				System.Net.Sockets.TcpClient client = new System.Net.Sockets.TcpClient("www.google.com", 80);
-				client.Close();
+				await req.GetResponseAsync();
 				return true;
 			}
-			catch (System.Exception)
+			catch (WebException)
 			{
 				return false;
 			}
